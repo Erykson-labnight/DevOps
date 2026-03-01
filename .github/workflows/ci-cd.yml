@@ -1,0 +1,42 @@
+name: Fase 2 Proyecto DevOps
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy-local:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t fase2-app:latest .
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.0
+
+      - name: Connect to Minikube
+        run: |
+          sudo apt-get update && sudo apt-get install -y conntrack
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube start --driver=docker
+          eval $(minikube docker-env)
+
+      - name: Deploy app with Helm
+        run: |
+          helm upgrade --install fase2-app ./helm/fase2-app \
+            --set image.repository=fase2-app \
+            --set image.tag=latest \
+            --wait
