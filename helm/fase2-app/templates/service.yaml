@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: {{ include "fase2-app.fullname" . }}
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 80
+  type: NodePort
   selector:
     app: {{ include "fase2-app.name" . }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: 80
