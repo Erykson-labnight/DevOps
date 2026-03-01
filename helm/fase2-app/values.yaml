@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: northamerica-south1-docker.pkg.dev/project-0ca024da-26b1-4714-97b/fase2/fase2-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
