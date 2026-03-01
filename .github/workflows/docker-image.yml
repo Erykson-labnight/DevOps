@@ -12,18 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Clonar el repositorio
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 2️⃣ Construir la imagen Docker
     - name: Build Docker image
       run: |
         IMAGE_TAG=my-image-name:$(date +%s)
         docker build ./docker --file ./docker/Dockerfile --tag $IMAGE_TAG
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-    # 3️⃣ Guardar la imagen como artifact para descargarla
     - name: Save Docker image as tar
       run: docker save $IMAGE_TAG -o fase2-app.tar
 
